@@ -18,7 +18,7 @@ module.exports = {
      * Provide the coordinator service with the service name and URL, implicit
      * in the POST request headers
      * @param {String} serviceName 
-     * @returns Promise for either a null return or an error
+     * @returns Promise for either a nothing or return or an error
      */
     registerServiceURL: function(serviceName) {
         let url = coordinatorURL + '/' + serviceName;
