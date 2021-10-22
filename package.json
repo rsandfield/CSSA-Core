@@ -1,6 +1,6 @@
 {
   "name": "cssa-url-completer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node module providing URL completion using data from the CSSA-Coordinator service.",
   "main": "app.js",
   "scripts": {
