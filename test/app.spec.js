@@ -58,15 +58,15 @@ describe('Register URLs', function() {
 
       completer.baseURLs[service] = url;
       return completer.getServiceURL(service)
-        .then(serviceURL => expect(serviceURL).to.eql(url))
+        .then(serviceURL => expect(serviceURL).to.eql("url"))
         .catch(err => should.exist(err))
     });
 
-    it('should throw an error on a nonexisting service', function() {
+    it('should throw an error on a nonexisting service', async function() {
       let badservice = "unexists"
       let url = "unexists.com"
       
-      completer.getServiceURL(badservice)
+      return completer.getServiceURL(badservice)
         .then(serviceURL => should.not.exist(serviceURL))
         .catch(err => should.exist(err))
     }); 

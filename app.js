@@ -42,7 +42,7 @@ module.exports = class UrlCompleter {
                 return this.baseURLs[serviceName];
             })
             .catch(_ => {
-                return Promise.reject(new Error("The service " + serviceName + " is not available."));
+                return Promise.reject(new Error("The " + serviceName + " service is not available."));
             });
     }
 
@@ -52,11 +52,10 @@ module.exports = class UrlCompleter {
      * @param {String} serviceName 
      * @returns Promise for either the service URL as a String or an error
      */
-    getServiceURL(serviceName) {
-        console.log(serviceName);
-        if(this.baseURLs[serviceName]) return new Promise((reject, resolve) => {
-            resolve(this.baseURLs[serviceName]);
-        });
+    async getServiceURL(serviceName) {
+        if(this.baseURLs[serviceName]) {
+            return Promise.resolve(this.baseURLs[serviceName]);
+        }
         return this.registerServiceURL(serviceName);
     }
 }
