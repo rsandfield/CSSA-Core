@@ -22,7 +22,7 @@ module.exports = class UrlCompleter {
      * @param {String} serviceName 
      * @returns Promise for either a nothing or return or an error
      */
-    registerServiceURL(serviceName) {
+    async registerServiceURL(serviceName) {
         let url = this.coordinatorURL + '/' + serviceName;
         return axios.post(url)
             .then(_ => null)
@@ -34,7 +34,7 @@ module.exports = class UrlCompleter {
      * @param {String} serviceName 
      * @returns Promise for either the service URL as a String or an error
      */
-    retrieveServiceURL(serviceName) {
+    async retrieveServiceURL(serviceName) {
         let url = this.coordinatorURL + '/' + serviceName;
         return axios.get(url)
             .then(res => {
@@ -42,7 +42,7 @@ module.exports = class UrlCompleter {
                 return this.baseURLs[serviceName];
             })
             .catch(_ => {
-                return new Error("The service " + serviceName + " is not available.");
+                return Promise.reject(new Error("The " + serviceName + " service is not available."));
             });
     }
 
@@ -52,12 +52,10 @@ module.exports = class UrlCompleter {
      * @param {String} serviceName 
      * @returns Promise for either the service URL as a String or an error
      */
-    getServiceURL(serviceName) {
-        return new Promise((resolve, reject) => {
-            if(!this.baseURLs[serviceName]) return this.registerServiceURL(serviceName);
-            return this.baseURLs[serviceName];
-        })
-        .then(_ => resolve(this.baseURLs[serviceName]))
-        .catch(err => Promise.reject(err));
+    async getServiceURL(serviceName) {
+        if(this.baseURLs[serviceName]) {
+            return Promise.resolve(this.baseURLs[serviceName]);
+        }
+        return this.registerServiceURL(serviceName);
     }
 }
