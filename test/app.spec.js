@@ -38,7 +38,7 @@ describe('Register URLs', function() {
     });
 
     it('should fail to set up a service URL in the tracking JSON for a non-existant service', async function() {
-      let error = new Error("The service " + badService + " is not available.");
+      let error = new Error("The " + badService + " service is not available.");
       nock(coordinatorURL)
         .get('/' + badService)
         .reply(404, error);
