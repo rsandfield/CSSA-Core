@@ -1,6 +1,5 @@
 const axios = require('axios').default;
 
-
 module.exports = class UrlCompleter {
     // URL of coordinator microservice, needs to be set prior to usage
     coordinatorURL;
@@ -22,12 +21,20 @@ module.exports = class UrlCompleter {
      * @param {String} serviceName 
      * @returns Promise for either a nothing or return or an error
      */
-    async registerServiceURL(serviceName) {
-        let url = this.coordinatorURL + '/' + serviceName;
-        return axios.post(url)
-            .then(_ => null)
-            .catch(err => err);
+    /*
+    async registerServiceURL(serviceName, port) {
+        port = {port: port}
+        console.log(port);
+        return axios.post(this.coordinatorURL + '/' + serviceName, "port")
+            .then(_ => {
+                console.log("Service " + serviceName + " registered with coordinator");
+                console.log(_.request.headers);
+                console.log(_.request.body);
+                console.log(_.request.data);
+                return Promise.resolve();
+            })
     }
+    */
     
     /**
      * Retrieve the URL for a service of the given name from the coordinator
@@ -35,11 +42,14 @@ module.exports = class UrlCompleter {
      * @returns Promise for either the service URL as a String or an error
      */
     async retrieveServiceURL(serviceName) {
-        let url = this.coordinatorURL + '/' + serviceName;
-        return axios.get(url)
+        return axios({
+            baseURL: this.coordinatorURL,
+            url: '/' + serviceName,
+            method: 'get'
+        })
             .then(res => {
-                this.baseURLs[serviceName] = res.data;
-                return this.baseURLs[serviceName];
+                this.baseURLs[serviceName] = res.data[serviceName];
+                return Promise.resolve(this.baseURLs[serviceName]);
             })
             .catch(_ => {
                 return Promise.reject(new Error("The " + serviceName + " service is not available."));
@@ -56,6 +66,6 @@ module.exports = class UrlCompleter {
         if(this.baseURLs[serviceName]) {
             return Promise.resolve(this.baseURLs[serviceName]);
         }
-        return this.registerServiceURL(serviceName);
+        return this.retrieveServiceURL(serviceName);
     }
 }
