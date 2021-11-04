@@ -1,21 +1,21 @@
 {
-  "name": "@rsandfield/cssa-url-completer",
-  "version": "1.0.2",
-  "description": "Node module providing URL completion using data from the CSSA-Coordinator service.",
+  "name": "@rsandfield/cssa-core",
+  "version": "1.1.0",
+  "description": "Node module providing core functionality to CSSA microservices.",
   "main": "app.js",
   "scripts": {
     "test": "mocha --exit"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rsandfield/CSSA-URL-Completer.git"
+    "url": "git+https://github.com/rsandfield/CSSA-Core.git"
   },
   "author": "Robert Sandfield",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rsandfield/CSSA-URL-Completer/issues"
+    "url": "https://github.com/rsandfield/CSSA-Core/issues"
   },
-  "homepage": "https://github.com/rsandfield/CSSA-URL-Completer#readme",
+  "homepage": "https://github.com/rsandfield/CSSA-Core#readme",
   "dependencies": {
     "axios": "^0.23.0"
   },
