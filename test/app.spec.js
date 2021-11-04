@@ -4,71 +4,89 @@ const nock = require('nock');
 const should = chai.should();
 const expect = chai.expect;
 
+const expectError = require('./helper').expectError;
+const errors = require('../models/errors');
+
+const UrlCompleter = require('../models/urlCompleter');
+
 var app = require('../app');
 
-describe('Register URLs', function() {
-    let coordinatorURL = 'https://localhost:3000';
-    let serviceURL = 'https://localhost:3001';
-    let goodService = 'test';
-    let badService = 'nope';
-    let completer = new app(coordinatorURL);
+  describe("UrlCompleter", function() {
+    coordinatorURL ="http://coordinator.com"
+    let completer = new UrlCompleter(coordinatorURL);
 
-    it('should set the coordinator url', () => {
-      expect(completer.coordinatorURL).to.eql(coordinatorURL);
-    });
+    let serviceName = "test"
+    let serviceUrl = "http://test.com"
 
-    it('should provide the coordinator with its name and address', async function() {
-      nock(coordinatorURL)
-        .post('/' + goodService)
-        .reply(204);
-      
-      return completer.registerServiceURL(goodService)
-        .then(res => {
-          should.not.exist(res);
-        });
-    })
-    
-    it('should set up a service URL in the tracking JSON for an existing service', async function() {
-      nock(coordinatorURL)
-        .get('/' + goodService)
-        .reply(200, serviceURL);
+    let badservice = "invalid";
 
-      return completer.retrieveServiceURL(goodService)
-        .then(res => res.should.be.eql(serviceURL));
-    });
-
-    it('should fail to set up a service URL in the tracking JSON for a non-existant service', async function() {
-      let error = new Error("The " + badService + " service is not available.");
-      nock(coordinatorURL)
-        .get('/' + badService)
-        .reply(404, error);
-
-      return completer.retrieveServiceURL(badService)
-        .then(res => should.not.exist(res))
-        .catch(err => {
-          should.exist(err)
-          err.message.should.eql(error.message);
-        });
-  });
-
-  describe("Get URLs", function() {
     it('should return an existing service', async function() {
-      let service = "exists"
-      let url = "exists.com"
+      nock(coordinatorURL)
+        .persist()
+        .get('/' + serviceName)
+        .reply(200, { [serviceName]: serviceUrl });
 
-      completer.baseURLs[service] = url;
-      return completer.getServiceURL(service)
-        .then(serviceURL => expect(serviceURL).to.eql("url"))
-        .catch(err => should.exist(err))
+      return completer.getServiceURL(serviceName)
+        .then(response => {
+          should.exist(response);
+
+          expect(response).to.eql(serviceUrl);
+        });
     });
 
     it('should throw an error on a nonexisting service', async function() {
-      let badservice = "unexists"
-      let url = "unexists.com"
+      nock(coordinatorURL)
+        .persist()
+        .get('/' + badservice)
+        .reply(404, { "Error": errors.ServiceNotFoundError.message });
       
       return completer.getServiceURL(badservice)
-        .then(serviceURL => should.not.exist(serviceURL))
-        .catch(err => should.exist(err))
-    }); 
-  });
+        .catch(err => {
+          should.exist(err);
+          err.should.be.instanceOf(errors.ServiceNotFoundError)
+        })
+    });
+
+    it('should get data from a remote service', async function() {
+      let response = "test text";
+
+      nock(serviceUrl)
+        .get('/test')
+        .reply(200, response);
+      
+      return completer.serviceRequest(serviceName, 'test', 'get', null, null)
+        .then(res => {
+          should.exist(res);
+
+          res.should.eql(response);
+        });
+    });
+
+    it('should return an error for a bad request to a remote service', async function() {
+      let error = new errors.UserNotFoundError();
+
+      nock(serviceUrl)
+        .get('/test')
+        .reply(error.status, { "Error": error.message });
+      
+      return completer.serviceRequest(serviceName, 'test', 'get', null, null)
+        .catch(err => {
+          should.exist(err);
+          
+          err.should.be.instanceOf(Error);
+          err.message.should.eql(error.message)
+        });
+    });
+
+    it('should return an error for a request to a nonexisting service', async function() {
+      let error = new errors.ServiceNotFoundError();
+      
+      return completer.serviceRequest(badservice, 'test', 'get', null, null)
+        .catch(err => {
+          should.exist(err);
+          
+          err.should.be.instanceOf(Error);
+          err.message.should.eql(error.message)
+        });
+    });
 });
