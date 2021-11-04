@@ -1,11 +1,13 @@
 const axios = require('axios').default;
 const errors = require('./errors');
 
+require('dotenv').config();
+
 module.exports = class UrlCompleter {
     // URL of coordinator microservice, needs to be set prior to usage
     coordinatorURL;
     // Object containing key:value pairs of service names and addresses
-    baseURLs = {};
+    services = {};
  
     /**
      * Provide a URL for the coordinator service which will be used when
@@ -19,17 +21,20 @@ module.exports = class UrlCompleter {
     /**
      * Retrieve the URL for a service of the given name from the coordinator
      * @param {String} serviceName 
-     * @returns Promise for either the service URL as a String or an error
+     * @returns Promise for either the service details or an error
      */
     async retrieveServiceURL(serviceName) {
         return axios({
             baseURL: this.coordinatorURL,
             url: '/' + serviceName,
-            method: 'get'
+            method: 'get',
+            headers: {
+                Authorization: process.env.coordinatorSecret
+            }
         })
             .then(res => {
-                this.baseURLs[serviceName] = res.data[serviceName];
-                return Promise.resolve(this.baseURLs[serviceName]);
+                this.services[serviceName] = res.data[serviceName];
+                return Promise.resolve(this.services[serviceName]);
             })
             .catch(_ => {
                 return Promise.reject(new errors.ServiceNotFoundError());
@@ -40,11 +45,11 @@ module.exports = class UrlCompleter {
      * Get the URL for a service of a given name from storage if already
      * retrieved successfully, or make a new request to the coordinator.
      * @param {String} serviceName 
-     * @returns Promise for either the service URL as a String or an error
+     * @returns Promise for either the service details or an error
      */
     async getServiceURL(serviceName) {
-        if(this.baseURLs[serviceName]) {
-            return Promise.resolve(this.baseURLs[serviceName]);
+        if(this.services[serviceName]) {
+            return Promise.resolve(this.services[serviceName]);
         }
         return this.retrieveServiceURL(serviceName);
     }
@@ -60,18 +65,20 @@ module.exports = class UrlCompleter {
      * @param {Object} data 
      * @returns Promise for either the expected response or an error
      */
-    async serviceRequest(serviceName, url, method, authorization, data) {
+    async serviceRequest(serviceName, url, method, data) {
         return this.getServiceURL(serviceName)
-            .then(service => axios({
-                baseURL: service,
-                url: url,
-                method: method,
-                headers: {
-                    Accept: 'application/json',
-                    ...(authorization) && {Authorization: authorization}
-                },
-                data: data
-            }))
+            .then(service => {
+                axios({
+                    baseURL: service.url,
+                    url: url,
+                    method: method,
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: service.token
+                    },
+                    data: data
+                })
+            })
             .then(response => Promise.resolve(response.data))
             .catch(error => {
                 if(error.response) {
