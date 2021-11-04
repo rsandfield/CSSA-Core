@@ -61,24 +61,21 @@ module.exports = class UrlCompleter {
      * @param {String} serviceName 
      * @param {String} url 
      * @param {String} method 
-     * @param {String} authorization 
-     * @param {Object} data 
+     * @param {any} data 
      * @returns Promise for either the expected response or an error
      */
     async serviceRequest(serviceName, url, method, data) {
         return this.getServiceURL(serviceName)
-            .then(service => {
-                axios({
-                    baseURL: service.url,
-                    url: url,
-                    method: method,
-                    headers: {
-                        Accept: 'application/json',
-                        Authorization: service.token
-                    },
-                    data: data
-                })
-            })
+            .then(service => axios({
+                baseURL: service.url,
+                url: url,
+                method: method,
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: service.token
+                },
+                ...(data) && {data: data}
+            }))
             .then(response => Promise.resolve(response.data))
             .catch(error => {
                 if(error.response) {
