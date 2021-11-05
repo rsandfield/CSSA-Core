@@ -65,7 +65,7 @@ var app = require('../app');
         .get('/test')
         .reply(200, response);
       
-      return completer.serviceRequest(serviceName, 'test', 'get', null)
+      return completer.serviceRequest(serviceName, 'test', null, 'get', null)
         .then(res => {
           should.exist(res);
 
@@ -80,7 +80,7 @@ var app = require('../app');
         .get('/test')
         .reply(error.status, { "Error": error.message });
       
-      return completer.serviceRequest(serviceName, 'test', 'get', null)
+      return completer.serviceRequest(serviceName, 'test', null, 'get', null)
         .catch(err => {
           should.exist(err);
           

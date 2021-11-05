@@ -11,7 +11,7 @@ require('dotenv').config(path.resolve('..'))
 const errors = require('./errors');
 
 module.exports = {
-    jwtSetup = function(completer) {
+    jwtSetup: function(completer) {
         passport.use(
             new LocalStrategy(function(username, password, done) {
             try {
@@ -60,7 +60,7 @@ module.exports = {
             }
         )(req, res, next);
     },
-    authenticate:function (req, res, next) {
+    authenticate: function (req, res, next) {
         passport.authenticate(
             'jwt',
             { session: false },
