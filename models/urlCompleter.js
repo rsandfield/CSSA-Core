@@ -59,16 +59,18 @@ module.exports = class UrlCompleter {
      * targeted at the correct service, either returning the response or error
      * wrapped into a usable form
      * @param {String} serviceName 
-     * @param {String} url 
+     * @param {String} routeBase 
      * @param {String} method 
      * @param {any} data 
      * @returns Promise for either the expected response or an error
      */
-    async serviceRequest(serviceName, url, method, data) {
+    async serviceRequest(serviceName, routeBase, routeExtended, method, data) {
+        if(routeExtended) routeBase += '/' + routeExtended;
+
         return this.getServiceURL(serviceName)
             .then(service => axios({
                 baseURL: service.url,
-                url: url,
+                url: routeBase,
                 method: method,
                 headers: {
                     Accept: 'application/json',
@@ -84,5 +86,17 @@ module.exports = class UrlCompleter {
                     return Promise.reject(error);
                 }
             })
+    }
+
+    async userServiceRequest(url, method, data) {
+        return this.serviceRequest('user', 'users/', url, method, data);
+    }
+
+    async storeServiceRequest(url, method, data) {
+        return this.serviceRequest('store', 'stores/', url, method, data);
+    }
+
+    async reviewServiceRequest(url, method, data) {
+        return this.serviceRequest('review', 'reviews/', url, method, data);
     }
 }
