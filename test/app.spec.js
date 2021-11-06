@@ -33,7 +33,7 @@ var app = require('../app');
             }
         });
 
-      return completer.getServiceURL(serviceName)
+      return completer.getServiceDetails(serviceName)
         .then(response => {
           should.exist(response);
 
@@ -51,7 +51,7 @@ var app = require('../app');
         .get('/' + badservice)
         .reply(404, { "Error": errors.ServiceNotFoundError.message });
       
-      return completer.getServiceURL(badservice)
+      return completer.getServiceDetails(badservice)
         .catch(err => {
           should.exist(err);
           err.should.be.instanceOf(errors.ServiceNotFoundError)
