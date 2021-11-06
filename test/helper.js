@@ -4,7 +4,7 @@ const expect = chai.expect;
 
 module.exports = {
     expectError(res, error) {
-        res.should.have.status(error.status);
+        expect(res.status).to.eql(error.status);
 
         should.exist(res.body);
         should.exist(res.body['Error']);

@@ -19,11 +19,11 @@ module.exports = class UrlCompleter {
     }
     
     /**
-     * Retrieve the URL for a service of the given name from the coordinator
+     * Retrieve the details for a service of the given name from the coordinator
      * @param {String} serviceName 
      * @returns Promise for either the service details or an error
      */
-    async retrieveServiceURL(serviceName) {
+    async retrieveServiceDetails(serviceName) {
         return axios({
             baseURL: this.coordinatorURL,
             url: '/' + serviceName,
@@ -42,16 +42,16 @@ module.exports = class UrlCompleter {
     }
 
     /**
-     * Get the URL for a service of a given name from storage if already
+     * Get the details for a service of a given name from storage if already
      * retrieved successfully, or make a new request to the coordinator.
      * @param {String} serviceName 
      * @returns Promise for either the service details or an error
      */
-    async getServiceURL(serviceName) {
+    async getServiceDetails(serviceName) {
         if(this.services[serviceName]) {
             return Promise.resolve(this.services[serviceName]);
         }
-        return this.retrieveServiceURL(serviceName);
+        return this.retrieveServiceDetails(serviceName);
     }
 
     /**
@@ -65,9 +65,11 @@ module.exports = class UrlCompleter {
      * @returns Promise for either the expected response or an error
      */
     async serviceRequest(serviceName, routeBase, routeExtended, method, data) {
-        if(routeExtended) routeBase += '/' + routeExtended;
-
-        return this.getServiceURL(serviceName)
+        if(routeExtended) {
+            if(routeExtended[0] != '/') routeBase += '/';
+            routeBase += routeExtended;
+        }
+        return this.getServiceDetails(serviceName)
             .then(service => axios({
                 baseURL: service.url,
                 url: routeBase,
@@ -89,14 +91,14 @@ module.exports = class UrlCompleter {
     }
 
     async userServiceRequest(url, method, data) {
-        return this.serviceRequest('user', 'users/', url, method, data);
+        return this.serviceRequest('user', 'users', url, method, data);
     }
 
     async storeServiceRequest(url, method, data) {
-        return this.serviceRequest('store', 'stores/', url, method, data);
+        return this.serviceRequest('store', 'stores', url, method, data);
     }
 
     async reviewServiceRequest(url, method, data) {
-        return this.serviceRequest('review', 'reviews/', url, method, data);
+        return this.serviceRequest('review', 'reviews', url, method, data);
     }
 }

@@ -4,6 +4,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const passportJWT = require('passport-jwt');
 const JwtStrategy = passportJWT.Strategy;
 const ExtractJwt = passportJWT.ExtractJwt;
+const jwt = require('jsonwebtoken')
 
 const path = require('path');
 require('dotenv').config(path.resolve('..'))
@@ -16,7 +17,7 @@ module.exports = {
             new LocalStrategy(function(username, password, done) {
             try {
                 //Check with user service that provided username and password match
-                completer.serviceRequest("user", "users/" + username,
+                completer.userServiceRequest(username,
                     "post", null, { password: password })
                     .then(user => done(null, user))
                     .catch(done(new errors.BadLoginError()))
@@ -31,12 +32,13 @@ module.exports = {
                 secretOrKey: process.env.JWTSECRET
             },
             async (jwtPayload, done) => {
-            if(Date.now() > jwtPayload.exp) {
-                return done("JWT is expired");
-            } else {
-                return done(null, jwtPayload.username);
+                if(Date.now() > jwtPayload.exp) {
+                    return done("JWT is expired");
+                } else {
+                    return done(null, jwtPayload.username);
+                }
             }
-        }));
+        ));
     },
     login: function(req, res, next) {
         passport.authenticate(
@@ -45,7 +47,7 @@ module.exports = {
             (error, user) => {
                 if(error) return next(error);
                 if(!user) return next(new errors.BadLoginError());
-                
+
                 user.token = jwt.sign(
                     { username: user.username },
                     process.env.JWTSECRET,
@@ -67,14 +69,6 @@ module.exports = {
             (error, user) => {
                 if(error) return next(error);
                 if(!user) return next(new errors.JwtInvalidError());
-                
-                user.token = jwt.sign(
-                    { username: user.username },
-                    process.env.JWTSECRET,
-                    {
-                        expiresIn: Date.now() + process.env.jwtExpiration
-                    }
-                );
 
                 req.user = user;
                 next();
