@@ -17,20 +17,31 @@ var app = require('../app');
 
     let serviceName = "test"
     let serviceUrl = "http://test.com"
+    let token = "placeholder";
 
     let badservice = "invalid";
+
 
     it('should return an existing service', async function() {
       nock(coordinatorURL)
         .persist()
         .get('/' + serviceName)
-        .reply(200, { [serviceName]: serviceUrl });
+        .reply(200, {
+            [serviceName]: {
+              url: serviceUrl,
+              token: token
+            }
+        });
 
-      return completer.getServiceURL(serviceName)
+      return completer.getServiceDetails(serviceName)
         .then(response => {
           should.exist(response);
 
-          expect(response).to.eql(serviceUrl);
+          should.exist(response.url);
+          should.exist(response.token);
+
+          expect(response.url).to.eql(serviceUrl);
+          expect(response.token).to.eql(token);
         });
     });
 
@@ -40,7 +51,7 @@ var app = require('../app');
         .get('/' + badservice)
         .reply(404, { "Error": errors.ServiceNotFoundError.message });
       
-      return completer.getServiceURL(badservice)
+      return completer.getServiceDetails(badservice)
         .catch(err => {
           should.exist(err);
           err.should.be.instanceOf(errors.ServiceNotFoundError)
@@ -54,7 +65,7 @@ var app = require('../app');
         .get('/test')
         .reply(200, response);
       
-      return completer.serviceRequest(serviceName, 'test', 'get', null, null)
+      return completer.serviceRequest(serviceName, 'test', null, 'get', null)
         .then(res => {
           should.exist(res);
 
@@ -69,7 +80,7 @@ var app = require('../app');
         .get('/test')
         .reply(error.status, { "Error": error.message });
       
-      return completer.serviceRequest(serviceName, 'test', 'get', null, null)
+      return completer.serviceRequest(serviceName, 'test', null, 'get', null)
         .catch(err => {
           should.exist(err);
           

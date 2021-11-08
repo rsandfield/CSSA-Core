@@ -28,6 +28,13 @@ module.exports = {
             this.status = 404;
         }
     },
+    MissingAttributeError: class MissingAttributeError extends Error {
+        constructor() {
+            super("Request has a missing required attribute");
+            this.name = "MissingAttributeError";
+            this.status = 400;
+        }
+    },
     UserNotFoundError: class UserNotFoundError extends Error {
         constructor() {
             super("User not found");
