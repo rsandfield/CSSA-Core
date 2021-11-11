@@ -17,8 +17,9 @@ module.exports = {
             new LocalStrategy(function(username, password, done) {
             try {
                 //Check with user service that provided username and password match
-                completer.userServiceRequest(username,
-                    "post", null, { password: password })
+                completer.userServiceRequest(
+                    username, "post", null, { "password": password }
+                )
                     .then(user => done(null, user))
                     .catch(done(new errors.BadLoginError()))
             } catch (error) {
