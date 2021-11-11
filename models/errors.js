@@ -9,6 +9,15 @@ function addStatus(error, status) {
     return error;
 }
 
+
+class NotFoundError extends Error {
+    constructor(notFound) {
+        super(notFound + " not found");
+        this.name = notFound + "NotFoundError";
+        this.status = 404;
+    }
+};
+
 module.exports = {
     handleErrors: function(err, req, res, next) {
         let status = err.status || 500;
@@ -21,25 +30,52 @@ module.exports = {
             errorResponse.response.status
         );
     },
-    ServiceNotFoundError: class ServiceNotFoundError extends Error {
+    /**
+     * 404 Not Found
+     */
+    ItemNotFoundError: class ItemNotFoundError extends NotFoundError {
         constructor() {
-            super("Service not found");
-            this.name = "ServiceNotFoundError";
-            this.status = 404;
+            super("Item");
         }
     },
+    ListNotFoundError: class ListNotFoundError extends NotFoundError {
+        constructor() {
+            super("List");
+        }
+    },
+    ReviewNotFoundError: class ReviewNotFoundError extends NotFoundError {
+        constructor() {
+            super("Review");
+        }
+    },
+    ServiceNotFoundError: class ServiceNotFoundError extends NotFoundError {
+        constructor() {
+            super("Service");
+        }
+    },
+    StoreNotFoundError: class StoreNotFoundError extends NotFoundError {
+        constructor() {
+            super("Store");
+        }
+    },
+    TagNotFoundError: class TagNotFoundError extends NotFoundError {
+        constructor() {
+            super("Tag");
+        }
+    },
+    UserNotFoundError: class UserNotFoundError extends NotFoundError {
+        constructor() {
+            super("User");
+        }
+    },
+    /**
+     * User Validation
+     */
     MissingAttributeError: class MissingAttributeError extends Error {
         constructor() {
             super("Request has a missing required attribute");
             this.name = "MissingAttributeError";
             this.status = 400;
-        }
-    },
-    UserNotFoundError: class UserNotFoundError extends Error {
-        constructor() {
-            super("User not found");
-            this.name = "UserNotFoundError";
-            this.status = 404;
         }
     },
     UsernameUnavailableError: class UsernameUnavailableError extends Error {
@@ -70,6 +106,9 @@ module.exports = {
             this.status = 400;
         }
     },
+    /**
+     * Authentication errors
+     */
     JwtExpiredError: class JwtExpiredError extends Error {
         constructor() {
             super("JWT is expired");
