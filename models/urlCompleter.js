@@ -102,8 +102,8 @@ module.exports = class UrlCompleter {
         return this.serviceRequest('review', 'reviews', url, method, data);
     }
 
-    async tagServiceRequest(url, method, data) {
-        return this.serviceRequest('tag', 'tags', url, method, data);
+    async tagServiceRequest(url, baseUrl, method, data) {
+        return this.serviceRequest('tag', baseUrl, url, method, data);
     }
 
     async itemServiceRequest(url, method, data) {
