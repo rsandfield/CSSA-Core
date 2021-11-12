@@ -38,9 +38,21 @@ module.exports = {
             super("Item");
         }
     },
+    ItemDoesNotHaveTagError: class ItemDoesNotHaveTagError extends Error {
+        constructor() {
+            super("That item does not have that tag");
+            this.name = "ItemDoesNotHaveTagError";
+            this.status = 404;
+        }
+    },
     ListNotFoundError: class ListNotFoundError extends NotFoundError {
         constructor() {
             super("List");
+        }
+    },
+    PriceNotFoundError: class PriceNotFoundError extends NotFoundError {
+        constructor() {
+            super("Price");
         }
     },
     ReviewNotFoundError: class ReviewNotFoundError extends NotFoundError {
