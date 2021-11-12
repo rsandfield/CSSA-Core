@@ -3,7 +3,15 @@ const should = chai.should();
 const expect = chai.expect;
 
 module.exports = {
+    /**
+     * Compares the error contained by the response to the error that was
+     * expected, including HTML response status
+     * @param {HTML Response} res 
+     * @param {Error} error 
+     */
     expectError(res, error) {
+        // Check status, defaulting to 500 if none provided
+        if(!error.status) expect(res.status).to.eql(500);
         expect(res.status).to.eql(error.status);
 
         should.exist(res.body);
@@ -11,6 +19,11 @@ module.exports = {
 
         expect(res.body['Error']).to.eql(error.message);
     },
+    /**
+     * Test the 'about' route for correctly extracting package information
+     * @param {Express} app 
+     * @param {JSON} packageJson 
+     */
     aboutTest(app, packageJson) {
         describe('/GET about', function() {
             it('should return project name and version', (done) => {
@@ -34,7 +47,13 @@ module.exports = {
             });
         });
     },
-    coordinatorConfigured(completer, services) {
+    /**
+     * Populate the app's UrlCompleter with nock service addresses and test that
+     * everything is reading correctly
+     * @param {UrlCompleter} completer 
+     * @param {Array} services 
+     */
+    configureAndTestCompleter(completer, services) {
         describe('Coordinator configured', function() {
             let invalidService = 'invalid';
         
@@ -79,6 +98,12 @@ module.exports = {
             });
         });
     },
+    /**
+     * Run a comparison between two objects, limited to the given keys
+     * @param {Object} expected 
+     * @param {Object} testing 
+     * @param {Keys} keys 
+     */
     compareObjects(expected, testing, keys) {
         keys.forEach(key => {
             expect(testing[key]).to.eql(expected[key]);
