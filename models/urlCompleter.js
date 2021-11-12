@@ -102,7 +102,7 @@ module.exports = class UrlCompleter {
         return this.serviceRequest('review', 'reviews', url, method, data);
     }
 
-    async tagServiceRequest(url, baseUrl, method, data) {
+    async tagServiceRequest(baseUrl, url, method, data) {
         return this.serviceRequest('tag', baseUrl, url, method, data);
     }
 
