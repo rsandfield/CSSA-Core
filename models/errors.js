@@ -43,6 +43,11 @@ module.exports = {
             super("List");
         }
     },
+    PriceNotFoundError: class PriceNotFoundError extends NotFoundError {
+        constructor() {
+            super("Price");
+        }
+    },
     ReviewNotFoundError: class ReviewNotFoundError extends NotFoundError {
         constructor() {
             super("Review");
