@@ -11,7 +11,30 @@ module.exports = {
 
         expect(res.body['Error']).to.eql(error.message);
     },
-    coordinatorConfigured(services) {
+    aboutTest(app, packageJson) {
+        describe('/GET about', function() {
+            it('should return project name and version', (done) => {
+                this.timeout(3000);
+        
+                chai.request(app)
+                    .get('/about')
+                    .then(res => {
+                        res.should.have.status(200);
+        
+                        let body = res.body;
+                        
+                        body.should.be.a('object');
+                        
+                        Object.keys(body).length.should.be.eql(2);
+                        
+                        body['name'].should.be.eql(packageJson.name);
+                        body['version'].should.be.eql(packageJson.version);
+                        done();
+                    });
+            });
+        });
+    },
+    coordinatorConfigured(app, services) {
         describe('Coordinator configured', function() {
             let completer = app.__get__('completer');
             let invalidService = 'invalid';
