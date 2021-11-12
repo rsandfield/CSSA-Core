@@ -57,7 +57,7 @@ module.exports = {
         describe('Coordinator configured', function() {
             let invalidService = 'invalid';
         
-            it('coordinator module should have coordinator URL from config', function() {
+            it('should have coordinator URL from config', function() {
                 expect(completer.coordinatorURL).to.eql(process.env.coordinatorURL);
             });
         
@@ -74,6 +74,7 @@ module.exports = {
                 
             });
         
+            // Populate nock routes
             services.forEach(service => {
                 nock(process.env.coordinatorURL)
                     .persist()
@@ -84,6 +85,7 @@ module.exports = {
                     }}); 
             });
         
+            // Test that services were registered correctly
             services.forEach(service => {
                 it("should get the " + service.name + " service address and access token", async function() {
                     return completer.getServiceDetails(service.name)
