@@ -38,6 +38,13 @@ module.exports = {
             super("Item");
         }
     },
+    ItemDoesNotHaveTagError: class ItemDoesNotHaveTagError extends NotFoundError {
+        constructor() {
+            super("That item does not have that tag");
+            this.name = "ItemDoesNotHaveTagError";
+            this.status = 404;
+        }
+    },
     ListNotFoundError: class ListNotFoundError extends NotFoundError {
         constructor() {
             super("List");
