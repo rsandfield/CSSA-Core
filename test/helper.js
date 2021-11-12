@@ -34,9 +34,8 @@ module.exports = {
             });
         });
     },
-    coordinatorConfigured(app, services) {
+    coordinatorConfigured(completer, services) {
         describe('Coordinator configured', function() {
-            let completer = app.__get__('completer');
             let invalidService = 'invalid';
         
             it('coordinator module should have coordinator URL from config', function() {
