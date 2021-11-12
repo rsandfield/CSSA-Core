@@ -38,7 +38,7 @@ module.exports = {
             super("Item");
         }
     },
-    ItemDoesNotHaveTagError: class ItemDoesNotHaveTagError extends NotFoundError {
+    ItemDoesNotHaveTagError: class ItemDoesNotHaveTagError extends Error {
         constructor() {
             super("That item does not have that tag");
             this.name = "ItemDoesNotHaveTagError";
