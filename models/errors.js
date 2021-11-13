@@ -9,14 +9,28 @@ function addStatus(error, status) {
     return error;
 }
 
+//https://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case
+function camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+        return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+}
 
 class NotFoundError extends Error {
     constructor(notFound) {
-        super(notFound + " not found");
+        super(`${notFound} not found`);
         this.name = notFound + "NotFoundError";
         this.status = 404;
     }
-};
+}
+
+class UnavailableError extends Error {
+    constructor(unavialable) {
+        super(`Requested ${unavialable.toLowerCase()} already in use`);
+        this.name = `${unavialable.camelize}UnavailableError`;
+        this.status = 403;
+    }
+}
 
 module.exports = {
     handleErrors: function(err, req, res, next) {
@@ -90,11 +104,9 @@ module.exports = {
             this.status = 400;
         }
     },
-    UsernameUnavailableError: class UsernameUnavailableError extends Error {
+    UsernameUnavailableError: class UsernameUnavailableError extends UnavailableError {
         constructor() {
-            super("Requested username already in use");
-            this.name = "UsernameUnavailableError";
-            this.status = 403;
+            super("Username");
         }
     },
     UsernameInvalidError: class UsernameInvalidError extends Error {
@@ -116,6 +128,14 @@ module.exports = {
             super("Requested reputation is invalid");
             this.name = "ReputationInvalidError";
             this.status = 400;
+        }
+    },
+    /**
+     * Item validation
+     */
+    ItemIdUnavailableError: class ItemIdUnavailableError extends UnavailableError {
+        constructor() {
+            super("Item ID");
         }
     },
     /**

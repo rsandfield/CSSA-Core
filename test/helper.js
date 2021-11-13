@@ -53,7 +53,7 @@ module.exports = {
      * @param {UrlCompleter} completer 
      * @param {Array} services 
      */
-    configureAndTestCompleter(completer, services) {
+    configureAndTestCompleter(nock, completer, services) {
         describe('Coordinator configured', function() {
             let invalidService = 'invalid';
         
