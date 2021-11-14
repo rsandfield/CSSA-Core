@@ -1,6 +1,11 @@
 const chai = require('chai');
+chai.use(require('chai-http'));
 const should = chai.should();
 const expect = chai.expect;
+
+const errors = require('../models/errors');
+
+require('dotenv').config()
 
 module.exports = {
     /**
@@ -76,6 +81,8 @@ module.exports = {
         
             // Populate nock routes
             services.forEach(service => {
+                console.log(service)
+                console.log(process.env.coordinatorURL)
                 nock(process.env.coordinatorURL)
                     .persist()
                     .get('/' + service.name)
