@@ -25,9 +25,9 @@ class NotFoundError extends Error {
 }
 
 class UnavailableError extends Error {
-    constructor(unavialable) {
-        super(`Requested ${unavialable.toLowerCase()} already in use`);
-        this.name = `${unavialable.camelize}UnavailableError`;
+    constructor(unavailable) {
+        super(`Requested ${unavailable.toLowerCase()} already in use`);
+        this.name = `${unavailable.camelize}UnavailableError`;
         this.status = 403;
     }
 }
