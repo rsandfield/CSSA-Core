@@ -81,8 +81,6 @@ module.exports = {
         
             // Populate nock routes
             services.forEach(service => {
-                console.log(service)
-                console.log(process.env.coordinatorURL)
                 nock(process.env.coordinatorURL)
                     .persist()
                     .get('/' + service.name)
