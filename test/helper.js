@@ -1,6 +1,11 @@
 const chai = require('chai');
+chai.use(require('chai-http'));
 const should = chai.should();
 const expect = chai.expect;
+
+const errors = require('../models/errors');
+
+require('dotenv').config()
 
 module.exports = {
     /**
