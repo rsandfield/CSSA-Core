@@ -95,7 +95,7 @@ const prices = [
         product_id: "4011",
         price: 0.37,
         sale: true,
-        sale_ends: 0
+        sale_ends: 1
     },
     {
         username: users[1].username,
