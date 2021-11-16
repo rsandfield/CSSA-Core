@@ -7,6 +7,7 @@ const errors = require('../models/errors');
 
 require('dotenv').config()
 
+
 module.exports = {
     /**
      * Compares the error contained by the response to the error that was
@@ -115,5 +116,5 @@ module.exports = {
         keys.forEach(key => {
             expect(testing[key]).to.eql(expected[key]);
         })
-    }
+    },
 }
