@@ -19,7 +19,7 @@ function camelize(str) {
 class NotFoundError extends Error {
     constructor(notFound) {
         super(`${notFound} not found`);
-        this.name = notFound + "NotFoundError";
+        this.name = notFound.camelize + "NotFoundError";
         this.status = 404;
     }
 }
@@ -47,21 +47,26 @@ module.exports = {
     /**
      * 404 Not Found
      */
-    ItemNotFoundError: class ItemNotFoundError extends NotFoundError {
+    ProductNotFoundError: class ProductNotFoundError extends NotFoundError {
         constructor() {
-            super("Item");
+            super("Product");
         }
     },
-    ItemDoesNotHaveTagError: class ItemDoesNotHaveTagError extends Error {
+    ProductDoesNotHaveTagError: class ProductDoesNotHaveTagError extends Error {
         constructor() {
-            super("That item does not have that tag");
-            this.name = "ItemDoesNotHaveTagError";
+            super("That product does not have that tag");
+            this.name = "ProductDoesNotHaveTagError";
             this.status = 404;
         }
     },
     ListNotFoundError: class ListNotFoundError extends NotFoundError {
         constructor() {
             super("List");
+        }
+    },
+    ListEntryNotFoundError: class ListEntryNotFoundError extends NotFoundError {
+        constructor() {
+            super("List entry");
         }
     },
     PriceNotFoundError: class PriceNotFoundError extends NotFoundError {
@@ -131,11 +136,11 @@ module.exports = {
         }
     },
     /**
-     * Item validation
+     * Product validation
      */
-    ItemIdUnavailableError: class ItemIdUnavailableError extends UnavailableError {
+    ProductIdUnavailableError: class ProductIdUnavailableError extends UnavailableError {
         constructor() {
-            super("Item ID");
+            super("Product ID");
         }
     },
     /**
