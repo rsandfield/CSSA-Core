@@ -90,27 +90,31 @@ module.exports = class UrlCompleter {
             })
     }
 
-    async userServiceRequest(url, method, data) {
-        return this.serviceRequest('user', 'users', url, method, data);
+    async listServiceRequest(url, method, data) {
+        return this.serviceRequest('list', 'lists', url, method, data);
     }
 
-    async storeServiceRequest(url, method, data) {
-        return this.serviceRequest('store', 'stores', url, method, data);
-    }
-
-    async reviewServiceRequest(url, method, data) {
-        return this.serviceRequest('review', 'reviews', url, method, data);
-    }
-
-    async tagServiceRequest(url, method, data) {
-        return this.serviceRequest('product', 'tags', url, method, data);
+    async priceServiceRequest(url, method, data) {
+        return this.serviceRequest('price', 'prices', url, method, data);
     }
 
     async productServiceRequest(url, method, data) {
         return this.serviceRequest('product', 'products', url, method, data);
     }
 
-    async priceServiceRequest(url, method, data) {
-        return this.serviceRequest('price', 'prices', url, method, data);
+    async reviewServiceRequest(url, method, data) {
+        return this.serviceRequest('review', 'reviews', url, method, data);
+    }
+
+    async storeServiceRequest(url, method, data) {
+        return this.serviceRequest('store', 'stores', url, method, data);
+    }
+
+    async tagServiceRequest(url, method, data) {
+        return this.serviceRequest('product', 'tags', url, method, data);
+    }
+
+    async userServiceRequest(url, method, data) {
+        return this.serviceRequest('user', 'users', url, method, data);
     }
 }
