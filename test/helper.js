@@ -93,8 +93,8 @@ module.exports = {
         
             // Test that services were registered correctly
             services.forEach(service => {
-                it("should get the " + service.name + " service address and access token", async function() {
-                    return completer.getServiceDetails(service.name)
+                it("should get the " + service['name'] + " service address and access token", async function() {
+                    return completer.getServiceDetails(service['name'])
                         .then(res => {              
                             should.exist(res.url);
                             should.exist(res.token);

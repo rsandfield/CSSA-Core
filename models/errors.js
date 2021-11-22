@@ -19,7 +19,7 @@ function camelize(str) {
 class NotFoundError extends Error {
     constructor(notFound) {
         super(`${notFound} not found`);
-        this.name = notFound.camelize + "NotFoundError";
+        this.name = camelize(notFound) + "NotFoundError";
         this.status = 404;
     }
 }
