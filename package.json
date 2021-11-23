@@ -1,6 +1,6 @@
 {
   "name": "@rsandfield/cssa-core",
-  "version": "1.5.1",
+  "version": "1.6.2",
   "description": "Node module providing core functionality to CSSA microservices.",
   "main": "app.js",
   "scripts": {
