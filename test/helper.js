@@ -113,6 +113,7 @@ module.exports = {
      * @param {Keys} keys 
      */
     compareObjects(expected, testing, keys) {
+        if(!keys) keys = Object.keys(expected);
         keys.forEach(key => {
             expect(testing[key]).to.eql(expected[key]);
         })

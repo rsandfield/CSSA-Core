@@ -393,8 +393,7 @@ class ServiceMockager {
             .get(`/reviews`, { store_id: store.id })
             .reply(200, reviews.filter(review => review.store_id == store.id))
         );
-
-        console.log("Wha")
+        
         reviews.forEach(review => {
             this.nock(serviceUrl)
                 .persist()
