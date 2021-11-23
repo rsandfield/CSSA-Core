@@ -28,9 +28,9 @@ module.exports = class UrlCompleter {
             baseURL: this.coordinatorURL,
             url: '/' + serviceName,
             method: 'get',
-            headers: {
-                Authorization: process.env.coordinatorSecret
-            }
+            // headers: {
+            //     Authorization: process.env.coordinatorSecret
+            // }
         })
             .then(res => {
                 this.services[serviceName] = res.data[serviceName];
@@ -76,7 +76,7 @@ module.exports = class UrlCompleter {
                 method: method,
                 headers: {
                     Accept: 'application/json',
-                    Authorization: service.token
+                    // Authorization: service.token
                 },
                 ...(data) && {data: data}
             }))
