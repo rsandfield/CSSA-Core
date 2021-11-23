@@ -388,7 +388,12 @@ class ServiceMockager {
             .reply(200, reviews.filter(review => review.reviewer == user.username))
         );
 
-        console.log("Wha")
+        stores.forEach(store => this.nock(serviceUrl)
+            .persist()
+            .get(`/reviews`, { store_id: store.id })
+            .reply(200, reviews.filter(review => review.store_id == store.id))
+        );
+        
         reviews.forEach(review => {
             this.nock(serviceUrl)
                 .persist()
