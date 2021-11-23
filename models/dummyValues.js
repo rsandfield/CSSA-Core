@@ -147,35 +147,23 @@ const stores = [
     }
 ];
 
-const reviews = [
-    {
-        id: 1,
-        reviewer: users[0].username,
-        store_id: stores[0].id,
-        rating: 1,
-        text: "It’s bad"
-    },
-    {
-        id: 2,
-        reviewer: users[1].username,
-        store_id: stores[0].id,
-        rating: 2,
-        text: "It’s not good"
-    },
-    {
-        id: 3,
-        reviewer: users[0].username,
-        store_id: stores[1].id,
-        rating: 3,
-        text: "It’s okay"
-    },
-    {
-        id: 4,
-        reviewer: users[1].username,
-        store_id: stores[1].id,
-        rating: 4,
-        text: "It’s good"
+let reviewID = 1;
+
+class Review {
+    constructor(reviewer, store, rating, text) {
+        this.id = reviewID++;
+        this.reviewer = reviewer.username;
+        this.store_id = store.id;
+        this.rating = rating;
+        this.text = text;
     }
+}
+
+const reviews = [
+    new Review(users[0], stores[0], 1, "It's bad"),
+    new Review(users[1], stores[0], 2, "It's not good"),
+    new Review(users[0], stores[1], 3, "It's okay"),
+    new Review(users[1], stores[1], 4, "It’s good")
 ];
 
 let priceID = 1;
@@ -400,16 +388,23 @@ class ServiceMockager {
             .reply(200, reviews.filter(review => review.reviewer == user.username))
         );
 
-        reviews.forEach(review => this.nock(serviceUrl)
-            .persist()
-            .post(`/reviews`, {
-                reviewer: review.reviewer,
-                store_id: review.store_id,
-                rating: review.rating,
-                text: review.text
-            })
-            .reply(201, review)
-        );
+        console.log("Wha")
+        reviews.forEach(review => {
+            this.nock(serviceUrl)
+                .persist()
+                .post(`/reviews`, {
+                    reviewer: review.reviewer,
+                    store_id: review.store_id.toString(),
+                    rating: review.rating.toString(),
+                    text: review.text
+                })
+                .reply(201, review)
+
+            this.nock(serviceUrl)
+                .persist()
+                .get(`/reviews/${review.id}`)
+                .reply(200, review)
+        });
 
         this.review = mockService(this.nock, 'review', reviews, 'reviews', "id",
             new errors.ReviewNotFoundError())
