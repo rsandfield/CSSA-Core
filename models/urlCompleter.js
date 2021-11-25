@@ -90,6 +90,10 @@ module.exports = class UrlCompleter {
             })
     }
 
+    async databaseServiceRequest(baseUrl, url, method, data) {
+        return this.serviceRequest('database', baseUrl, url, method, data);
+    }
+
     async listServiceRequest(url, method, data) {
         return this.serviceRequest('list', 'lists', url, method, data);
     }
