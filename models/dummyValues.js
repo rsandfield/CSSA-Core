@@ -293,6 +293,7 @@ class ServiceMockager {
         this.registered = serviceNames;
     
         if(serviceNames.includes('comparison')) this.registerComparison();
+        if(serviceNames.includes('database')) this.registerDatabase();
         if(serviceNames.includes('live feed')) this.registerLiveFeed();
         if(serviceNames.includes('price')) this.registerPrices();
         if(serviceNames.includes('product')) this.registerProducts();
@@ -304,7 +305,7 @@ class ServiceMockager {
     }
 
     registerComparison() {
-        let serviceUrl = "https://compariandsons.com"
+        let serviceUrl = "https://comparison.com"
 
         comparisons.forEach(comparison => this.nock(serviceUrl)
             .get(`/${comparison.list.id}`, { username: comparison.list.owner, zip: comparison.zip })
@@ -313,6 +314,16 @@ class ServiceMockager {
         
         this.comparison = {
             name: "comparison",
+            url: serviceUrl,
+            token: "placeholder"            
+        }
+    }
+
+    registerComparison() {
+        let serviceUrl = "https://database.com"
+
+        this.comparison = {
+            name: "database",
             url: serviceUrl,
             token: "placeholder"            
         }
