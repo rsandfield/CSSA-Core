@@ -156,6 +156,7 @@ class Review {
         this.store_id = store.id;
         this.rating = rating;
         this.text = text;
+        this.posted = Date.now();
     }
 }
 
