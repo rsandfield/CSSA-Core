@@ -319,7 +319,7 @@ class ServiceMockager {
         }
     }
 
-    registerComparison() {
+    registerDatabase() {
         let serviceUrl = "https://database.com"
 
         this.comparison = {
