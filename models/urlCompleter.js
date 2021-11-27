@@ -66,8 +66,12 @@ module.exports = class UrlCompleter {
      */
     async serviceRequest(serviceName, routeBase, routeExtended, method, data) {
         if(routeExtended) {
-            if(routeExtended[0] != '/') routeBase += '/';
-            routeBase += routeExtended;
+            routeBase += '/' + routeExtended;
+            // Sanitize any excess slashes or using a query string
+            routeBase = routeBase
+                .replace('//', '/')
+                .replace('//', '/')
+                .replace('/?', '?');
         }
         return this.getServiceDetails(serviceName)
             .then(service => axios({
