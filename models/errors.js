@@ -33,6 +33,7 @@ class UnavailableError extends Error {
 }
 
 module.exports = {
+    camelize: camelize,
     handleErrors: function(err, req, res, next) {
         let status = err.status || 500;
         res.status(status).json({ "Error": err.message });
@@ -43,6 +44,10 @@ module.exports = {
             new Error(errorResponse.response.data['Error']),
             errorResponse.response.status
         );
+    },
+    sendError: function(res, error) {
+        let status = error.status || 500
+        res.status(status).json({ Error: error.message })
     },
     /**
      * 404 Not Found
